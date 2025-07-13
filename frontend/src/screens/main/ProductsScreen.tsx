@@ -13,6 +13,7 @@ import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/native';
 import Header from '../../components/ui/Header';
 import AnimatedCard from '../../components/ui/AnimatedCard';
+import AnimatedCard from '../../components/ui/AnimatedCard';
 import {useProductStore} from '../../store/productStore';
 import {useAuthStore} from '../../store/authStore';
 
@@ -38,6 +39,8 @@ const ProductsScreen: React.FC = () => {
       <Header
         title={t('products.title')}
         subtitle={`${storeProducts.length} ${t('navigation.products')} • ${lowStockProducts.length} ${t('products.alerts')}`}
+        title={t('products.title')}
+        subtitle={`${storeProducts.length} ${t('navigation.products')} • ${lowStockProducts.length} ${t('products.alerts')}`}
         showNotifications={true}
       />
 
@@ -45,8 +48,10 @@ const ProductsScreen: React.FC = () => {
         <View style={styles.searchContainer}>
           <View style={styles.searchBar}>
             <MockIcon name="search" size={20} color="#6B7280" />
+            <MockIcon name="search" size={20} color="#6B7280" />
             <TextInput
               style={styles.searchInput}
+              placeholder={t('products.searchPlaceholder')}
               placeholder={t('products.searchPlaceholder')}
               value={searchQuery}
               onChangeText={setSearchQuery}
@@ -75,13 +80,18 @@ const ProductsScreen: React.FC = () => {
 
         {lowStockProducts.length > 0 && (
           <AnimatedCard style={styles.alertCard} animationType="slideUp">
+          <AnimatedCard style={styles.alertCard} animationType="slideUp">
             <View style={styles.alertHeader}>
+              <MockIcon name="warning" size={20} color="#EF4444" />
+              <Text style={styles.alertTitle}>{t('products.lowStockAlert')}</Text>
               <MockIcon name="warning" size={20} color="#EF4444" />
               <Text style={styles.alertTitle}>{t('products.lowStockAlert')}</Text>
             </View>
             <Text style={styles.alertSubtitle}>
               {lowStockProducts.length} {t('products.lowStockProducts')}
+              {lowStockProducts.length} {t('products.lowStockProducts')}
             </Text>
+          </AnimatedCard>
           </AnimatedCard>
         )}
 
@@ -93,8 +103,16 @@ const ProductsScreen: React.FC = () => {
               delay={index * 100}
               animationType="slideUp"
             >
+          {filteredProducts.map((product, index) => (
+            <AnimatedCard 
+              key={product.id} 
+              style={styles.productCard}
+              delay={index * 100}
+              animationType="slideUp"
+            >
               <View style={styles.productHeader}>
                 <View style={styles.productIcon}>
+                  <MockIcon name="inventory" size={24} color="#2563EB" />
                   <MockIcon name="inventory" size={24} color="#2563EB" />
                 </View>
                 <View style={styles.productInfo}>
@@ -105,6 +123,7 @@ const ProductsScreen: React.FC = () => {
 
               <View style={styles.stockInfo}>
                 <View style={styles.stockItem}>
+                  <Text style={styles.stockLabel}>{t('products.currentStock')}</Text>
                   <Text style={styles.stockLabel}>{t('products.currentStock')}</Text>
                   <Text
                     style={[
@@ -117,6 +136,7 @@ const ProductsScreen: React.FC = () => {
                 </View>
                 <View style={styles.stockItem}>
                   <Text style={styles.stockLabel}>{t('products.minThreshold')}</Text>
+                  <Text style={styles.stockLabel}>{t('products.minThreshold')}</Text>
                   <Text style={styles.stockValue}>{product.minStockAlert}</Text>
                 </View>
               </View>
@@ -124,11 +144,13 @@ const ProductsScreen: React.FC = () => {
               <View style={styles.priceInfo}>
                 <View style={styles.priceItem}>
                   <Text style={styles.priceLabel}>{t('products.unitPrice')}</Text>
+                  <Text style={styles.priceLabel}>{t('products.unitPrice')}</Text>
                   <Text style={styles.priceValue}>
                     {product.unitSalePrice.toLocaleString()}
                   </Text>
                 </View>
                 <View style={styles.priceItem}>
+                  <Text style={styles.priceLabel}>{t('products.packagePrice')}</Text>
                   <Text style={styles.priceLabel}>{t('products.packagePrice')}</Text>
                   <Text style={styles.priceValue}>
                     {product.packageSalePrice.toLocaleString()}
@@ -139,14 +161,17 @@ const ProductsScreen: React.FC = () => {
               <View style={styles.packageInfo}>
                 <Text style={styles.packageText}>
                   {product.unitsPerPackage} {t('products.unitsPerPackage')}
+                  {product.unitsPerPackage} {t('products.unitsPerPackage')}
                 </Text>
               </View>
 
               {product.currentStock <= product.minStockAlert && (
                 <View style={styles.lowStockBadge}>
                   <Text style={styles.lowStockText}>{t('products.lowStock')}</Text>
+                  <Text style={styles.lowStockText}>{t('products.lowStock')}</Text>
                 </View>
               )}
+            </AnimatedCard>
             </AnimatedCard>
           ))}
         </View>
@@ -155,8 +180,12 @@ const ProductsScreen: React.FC = () => {
           <View style={styles.emptyState}>
             <MockIcon name="inventory" size={48} color="#9CA3AF" />
             <Text style={styles.emptyTitle}>{t('products.noProductsFound')}</Text>
+            <MockIcon name="inventory" size={48} color="#9CA3AF" />
+            <Text style={styles.emptyTitle}>{t('products.noProductsFound')}</Text>
             <Text style={styles.emptySubtitle}>
               {searchQuery
+                ? t('products.tryDifferentSearch')
+                : t('products.addFirstProducts')}
                 ? t('products.tryDifferentSearch')
                 : t('products.addFirstProducts')}
             </Text>

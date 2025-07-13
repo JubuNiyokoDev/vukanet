@@ -4,14 +4,18 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import MockIcon from '../../components/ui/MockIcon';
 import {useTranslation} from 'react-i18next';
+import MockIcon from '../../components/ui/MockIcon';
+import {useTranslation} from 'react-i18next';
 import Header from '../../components/ui/Header';
 import StatCard from '../../components/ui/StatCard';
+import AnimatedCard from '../../components/ui/AnimatedCard';
 import AnimatedCard from '../../components/ui/AnimatedCard';
 import {useAuthStore} from '../../store/authStore';
 import {useProductStore} from '../../store/productStore';
 import {useSalesStore} from '../../store/salesStore';
 
 const DashboardScreen: React.FC = () => {
+  const {t} = useTranslation();
   const {t} = useTranslation();
   const {user} = useAuthStore();
   const {products, getLowStockProducts} = useProductStore();
@@ -38,6 +42,8 @@ const DashboardScreen: React.FC = () => {
         <Header
           title={`${t('dashboard.hello')}, ${user?.name || 'Utilisateur'}`}
           subtitle={user?.storeName || t('profile.store')}
+          title={`${t('dashboard.hello')}, ${user?.name || 'Utilisateur'}`}
+          subtitle={user?.storeName || t('profile.store')}
           showNotifications={true}
         />
       </LinearGradient>
@@ -51,12 +57,14 @@ const DashboardScreen: React.FC = () => {
               iconName="attach-money"
               color="#10B981"
               subtitle={t('dashboard.totalEncashed')}
+              subtitle={t('dashboard.totalEncashed')}
             />
             <StatCard
               title={t('dashboard.stockCapital')}
               value={`${stockCapital.toLocaleString()} FBU`}
               iconName="inventory"
               color="#2563EB"
+              subtitle={t('dashboard.inventoryValue')}
               subtitle={t('dashboard.inventoryValue')}
             />
           </View>
@@ -67,17 +75,22 @@ const DashboardScreen: React.FC = () => {
               iconName="trending-up"
               color="#F59E0B"
               subtitle={t('dashboard.toRecover')}
+              subtitle={t('dashboard.toRecover')}
             />
             <StatCard
+              title={t('dashboard.stockAlerts')}
               title={t('dashboard.stockAlerts')}
               value={lowStockProducts.length.toString()}
               iconName="warning"
               color="#EF4444"
               subtitle={t('dashboard.lowProducts')}
+              subtitle={t('dashboard.lowProducts')}
             />
           </View>
         </View>
 
+        <AnimatedCard style={styles.alertsCard} delay={200} animationType="slideUp">
+          <Text style={styles.alertsTitle}>{t('dashboard.stockAlertsTitle')}</Text>
         <AnimatedCard style={styles.alertsCard} delay={200} animationType="slideUp">
           <Text style={styles.alertsTitle}>{t('dashboard.stockAlertsTitle')}</Text>
           {lowStockProducts.length > 0 ? (
@@ -91,23 +104,30 @@ const DashboardScreen: React.FC = () => {
                 </View>
                 <View style={styles.alertBadge}>
                   <Text style={styles.alertBadgeText}>{t('dashboard.lowStock')}</Text>
+                  <Text style={styles.alertBadgeText}>{t('dashboard.lowStock')}</Text>
                 </View>
               </View>
             ))
           ) : (
             <Text style={styles.noAlerts}>{t('dashboard.noAlerts')}</Text>
+            <Text style={styles.noAlerts}>{t('dashboard.noAlerts')}</Text>
           )}
         </AnimatedCard>
+        </AnimatedCard>
 
+        <AnimatedCard style={styles.quickStatsCard} delay={400} animationType="scale">
+          <Text style={styles.quickStatsTitle}>{t('dashboard.quickOverview')}</Text>
         <AnimatedCard style={styles.quickStatsCard} delay={400} animationType="scale">
           <Text style={styles.quickStatsTitle}>{t('dashboard.quickOverview')}</Text>
           <View style={styles.quickStatsGrid}>
             <View style={styles.quickStatItem}>
               <Text style={styles.quickStatValue}>{storeProducts.length}</Text>
               <Text style={styles.quickStatLabel}>{t('dashboard.products')}</Text>
+              <Text style={styles.quickStatLabel}>{t('dashboard.products')}</Text>
             </View>
             <View style={styles.quickStatItem}>
               <Text style={styles.quickStatValue}>{sales.length}</Text>
+              <Text style={styles.quickStatLabel}>{t('dashboard.sales')}</Text>
               <Text style={styles.quickStatLabel}>{t('dashboard.sales')}</Text>
             </View>
             <View style={styles.quickStatItem}>
@@ -118,8 +138,10 @@ const DashboardScreen: React.FC = () => {
                 %
               </Text>
               <Text style={styles.quickStatLabel}>{t('dashboard.margin')}</Text>
+              <Text style={styles.quickStatLabel}>{t('dashboard.margin')}</Text>
             </View>
           </View>
+        </AnimatedCard>
         </AnimatedCard>
       </ScrollView>
     </SafeAreaView>

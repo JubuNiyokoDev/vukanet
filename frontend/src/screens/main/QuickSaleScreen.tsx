@@ -119,7 +119,7 @@ const QuickSaleScreen: React.FC = () => {
 
     Alert.alert(
       'Confirmer la vente',
-      `Total: ${getTotalAmount().toLocaleString()} FCFA\nArticles: ${getTotalItems()}\nClient: ${
+      `Total: ${getTotalAmount().toLocaleString()} FBU\nArticles: ${getTotalItems()}\nClient: ${
         clientName || 'Anonyme'
       }`,
       [
@@ -215,7 +215,7 @@ const QuickSaleScreen: React.FC = () => {
                         {product.category}
                       </Text>
                       <Text style={styles.productPrice}>
-                        {product.unitSalePrice.toLocaleString()} FCFA
+                        {product.unitSalePrice.toLocaleString()} FBU
                       </Text>
                     </View>
                     <View style={styles.productStock}>
@@ -251,7 +251,7 @@ const QuickSaleScreen: React.FC = () => {
                   <View style={styles.cartItemInfo}>
                     <Text style={styles.cartItemName}>{item.name}</Text>
                     <Text style={styles.cartItemPrice}>
-                      {item.price.toLocaleString()} FCFA
+                      {item.price.toLocaleString()} FBU
                     </Text>
                   </View>
                   <View style={styles.quantityControls}>
@@ -374,7 +374,7 @@ const QuickSaleScreen: React.FC = () => {
                   <View style={styles.totalRow}>
                     <Text style={styles.totalLabel}>Total</Text>
                     <Text style={styles.totalAmount}>
-                      {getTotalAmount().toLocaleString()} FCFA
+                      {getTotalAmount().toLocaleString()} FBU
                     </Text>
                   </View>
                 </View>

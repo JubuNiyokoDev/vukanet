@@ -14,12 +14,14 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useAuthStore} from '../../store/authStore';
+import {useNavigation} from '@react-navigation/native';
 
 const LoginScreen: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const navigation = useNavigation();
 
   const {login} = useAuthStore();
 
@@ -94,7 +96,9 @@ const LoginScreen: React.FC = () => {
                 </TouchableOpacity>
               </View>
 
-              <TouchableOpacity style={styles.forgotPassword}>
+              <TouchableOpacity 
+                style={styles.forgotPassword}
+                onPress={() => navigation.navigate('ForgotPassword' as never)}>
                 <Text style={styles.forgotPasswordText}>
                   Mot de passe oublié ?
                 </Text>
@@ -123,7 +127,9 @@ const LoginScreen: React.FC = () => {
                 <View style={styles.dividerLine} />
               </View>
 
-              <TouchableOpacity style={styles.registerButton}>
+              <TouchableOpacity 
+                style={styles.registerButton}
+                onPress={() => navigation.navigate('Register' as never)}>
                 <Text style={styles.registerButtonText}>Créer un compte</Text>
               </TouchableOpacity>
             </View>

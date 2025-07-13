@@ -1,15 +1,27 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useTranslation} from 'react-i18next';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import MockIcon from '../components/ui/MockIcon';
 
 import DashboardScreen from '../screens/main/DashboardScreen';
 import ProductsScreen from '../screens/main/ProductsScreen';
 import SalesScreen from '../screens/main/SalesScreen';
 import QuickSaleScreen from '../screens/main/QuickSaleScreen';
 import ProfileScreen from '../screens/main/ProfileScreen';
+import AddProductScreen from '../screens/main/AddProductScreen';
+import StockManagementScreen from '../screens/main/StockManagementScreen';
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
+
+const ProductsStack = () => (
+  <Stack.Navigator screenOptions={{headerShown: false}}>
+    <Stack.Screen name="ProductsList" component={ProductsScreen} />
+    <Stack.Screen name="AddProduct" component={AddProductScreen} />
+    <Stack.Screen name="StockManagement" component={StockManagementScreen} />
+  </Stack.Navigator>
+);
 
 const MainNavigator: React.FC = () => {
   const {t} = useTranslation();
@@ -62,7 +74,7 @@ const MainNavigator: React.FC = () => {
               break;
           }
 
-          return <Icon name={iconName} size={20} color={color} />;
+          return <MockIcon name={iconName} size={20} color={color} />;
         },
       })}>
       <Tab.Screen
@@ -81,7 +93,7 @@ const MainNavigator: React.FC = () => {
       />
       <Tab.Screen
         name="Products"
-        component={ProductsScreen}
+        component={ProductsStack}
         options={{
           title: t('navigation.products'),
         }}

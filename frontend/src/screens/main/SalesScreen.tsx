@@ -36,7 +36,7 @@ const SalesScreen: React.FC = () => {
     <SafeAreaView style={styles.container}>
       <Header
         title="Ventes"
-        subtitle={`${storeSales.length} ventes • ${totalSales.toLocaleString()} FCFA`}
+        subtitle={`${storeSales.length} ventes • ${totalSales.toLocaleString()} FBU`}
         showNotifications={true}
       />
 
@@ -88,7 +88,7 @@ const SalesScreen: React.FC = () => {
                 <View style={styles.saleInfo}>
                   <Text style={styles.saleProduct}>{sale.productName}</Text>
                   <Text style={styles.saleAmount}>
-                    {sale.totalAmount.toLocaleString()} FCFA
+                    {sale.totalAmount.toLocaleString()} FBU
                   </Text>
                 </View>
                 {sale.isDebt && (

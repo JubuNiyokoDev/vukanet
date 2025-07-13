@@ -18,6 +18,10 @@ model User {
   storeId   String?
   store     Store?   @relation(fields: [storeId], references: [id])
   
+  // Password reset
+  resetToken       String?
+  resetTokenExpiry DateTime?
+  
   // Relations
   sales           Sale[]
   stockMovements  StockMovement[]

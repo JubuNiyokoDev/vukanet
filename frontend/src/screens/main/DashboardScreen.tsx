@@ -2,15 +2,17 @@ import React from 'react';
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import MockIcon from '../../components/ui/MockIcon';
+import {useTranslation} from 'react-i18next';
 import Header from '../../components/ui/Header';
 import StatCard from '../../components/ui/StatCard';
-import Card from '../../components/ui/Card';
+import AnimatedCard from '../../components/ui/AnimatedCard';
 import {useAuthStore} from '../../store/authStore';
 import {useProductStore} from '../../store/productStore';
 import {useSalesStore} from '../../store/salesStore';
 
 const DashboardScreen: React.FC = () => {
+  const {t} = useTranslation();
   const {user} = useAuthStore();
   const {products, getLowStockProducts} = useProductStore();
   const {sales, getTotalSales, getTotalDebts} = useSalesStore();
@@ -34,8 +36,8 @@ const DashboardScreen: React.FC = () => {
     <SafeAreaView style={styles.container}>
       <LinearGradient colors={['#2563EB', '#1D4ED8']} style={styles.header}>
         <Header
-          title={`Bonjour, ${user?.name || 'Utilisateur'}`}
-          subtitle={user?.storeName || 'Magasin'}
+          title={`${t('dashboard.hello')}, ${user?.name || 'Utilisateur'}`}
+          subtitle={user?.storeName || t('profile.store')}
           showNotifications={true}
         />
       </LinearGradient>
@@ -44,40 +46,40 @@ const DashboardScreen: React.FC = () => {
         <View style={styles.statsContainer}>
           <View style={styles.statsRow}>
             <StatCard
-              title="Ventes du jour"
-              value={`${totalSales.toLocaleString()} FCFA`}
+              title={t('dashboard.dailySales')}
+              value={`${totalSales.toLocaleString()} FBU`}
               iconName="attach-money"
               color="#10B981"
-              subtitle="Total encaissé"
+              subtitle={t('dashboard.totalEncashed')}
             />
             <StatCard
-              title="Capital stock"
-              value={`${stockCapital.toLocaleString()} FCFA`}
+              title={t('dashboard.stockCapital')}
+              value={`${stockCapital.toLocaleString()} FBU`}
               iconName="inventory"
               color="#2563EB"
-              subtitle="Valeur inventaire"
+              subtitle={t('dashboard.inventoryValue')}
             />
           </View>
           <View style={styles.statsRow}>
             <StatCard
-              title="Créances"
-              value={`${totalDebts.toLocaleString()} FCFA`}
+              title={t('dashboard.debts')}
+              value={`${totalDebts.toLocaleString()} FBU`}
               iconName="trending-up"
               color="#F59E0B"
-              subtitle="À recouvrer"
+              subtitle={t('dashboard.toRecover')}
             />
             <StatCard
-              title="Alertes stock"
+              title={t('dashboard.stockAlerts')}
               value={lowStockProducts.length.toString()}
               iconName="warning"
               color="#EF4444"
-              subtitle="Produits faibles"
+              subtitle={t('dashboard.lowProducts')}
             />
           </View>
         </View>
 
-        <Card style={styles.alertsCard}>
-          <Text style={styles.alertsTitle}>Alertes de stock</Text>
+        <AnimatedCard style={styles.alertsCard} delay={200} animationType="slideUp">
+          <Text style={styles.alertsTitle}>{t('dashboard.stockAlertsTitle')}</Text>
           {lowStockProducts.length > 0 ? (
             lowStockProducts.map(product => (
               <View key={product.id} style={styles.alertItem}>
@@ -88,25 +90,25 @@ const DashboardScreen: React.FC = () => {
                   </Text>
                 </View>
                 <View style={styles.alertBadge}>
-                  <Text style={styles.alertBadgeText}>Faible</Text>
+                  <Text style={styles.alertBadgeText}>{t('dashboard.lowStock')}</Text>
                 </View>
               </View>
             ))
           ) : (
-            <Text style={styles.noAlerts}>Aucune alerte de stock</Text>
+            <Text style={styles.noAlerts}>{t('dashboard.noAlerts')}</Text>
           )}
-        </Card>
+        </AnimatedCard>
 
-        <Card style={styles.quickStatsCard}>
-          <Text style={styles.quickStatsTitle}>Aperçu rapide</Text>
+        <AnimatedCard style={styles.quickStatsCard} delay={400} animationType="scale">
+          <Text style={styles.quickStatsTitle}>{t('dashboard.quickOverview')}</Text>
           <View style={styles.quickStatsGrid}>
             <View style={styles.quickStatItem}>
               <Text style={styles.quickStatValue}>{storeProducts.length}</Text>
-              <Text style={styles.quickStatLabel}>Produits</Text>
+              <Text style={styles.quickStatLabel}>{t('dashboard.products')}</Text>
             </View>
             <View style={styles.quickStatItem}>
               <Text style={styles.quickStatValue}>{sales.length}</Text>
-              <Text style={styles.quickStatLabel}>Ventes</Text>
+              <Text style={styles.quickStatLabel}>{t('dashboard.sales')}</Text>
             </View>
             <View style={styles.quickStatItem}>
               <Text style={styles.quickStatValue}>
@@ -115,10 +117,10 @@ const DashboardScreen: React.FC = () => {
                 ) || 0}
                 %
               </Text>
-              <Text style={styles.quickStatLabel}>Marge</Text>
+              <Text style={styles.quickStatLabel}>{t('dashboard.margin')}</Text>
             </View>
           </View>
-        </Card>
+        </AnimatedCard>
       </ScrollView>
     </SafeAreaView>
   );

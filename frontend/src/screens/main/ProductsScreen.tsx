@@ -8,13 +8,17 @@ import {
   TextInput,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import MockIcon from '../../components/ui/MockIcon';
+import {useTranslation} from 'react-i18next';
+import {useNavigation} from '@react-navigation/native';
 import Header from '../../components/ui/Header';
-import Card from '../../components/ui/Card';
+import AnimatedCard from '../../components/ui/AnimatedCard';
 import {useProductStore} from '../../store/productStore';
 import {useAuthStore} from '../../store/authStore';
 
 const ProductsScreen: React.FC = () => {
+  const {t} = useTranslation();
+  const navigation = useNavigation();
   const {user} = useAuthStore();
   const {products, getLowStockProducts} = useProductStore();
   const [searchQuery, setSearchQuery] = useState('');
@@ -32,46 +36,66 @@ const ProductsScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Header
-        title="Produits"
-        subtitle={`${storeProducts.length} produits • ${lowStockProducts.length} alertes`}
+        title={t('products.title')}
+        subtitle={`${storeProducts.length} ${t('navigation.products')} • ${lowStockProducts.length} ${t('products.alerts')}`}
         showNotifications={true}
       />
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.searchContainer}>
           <View style={styles.searchBar}>
-            <Icon name="search" size={20} color="#6B7280" />
+            <MockIcon name="search" size={20} color="#6B7280" />
             <TextInput
               style={styles.searchInput}
-              placeholder="Rechercher un produit..."
+              placeholder={t('products.searchPlaceholder')}
               value={searchQuery}
               onChangeText={setSearchQuery}
               placeholderTextColor="#9CA3AF"
             />
           </View>
-          <TouchableOpacity style={styles.addButton}>
-            <Icon name="add" size={20} color="#FFFFFF" />
+          <TouchableOpacity 
+            style={styles.addButton}
+            onPress={() => navigation.navigate('AddProduct' as never)}>
+            <MockIcon name="add" size={20} color="#FFFFFF" />
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.actionButtons}>
+          <TouchableOpacity 
+            style={styles.actionButton}
+            onPress={() => navigation.navigate('StockManagement' as never)}>
+            <MockIcon name="inventory" size={20} color="#2563EB" />
+            <Text style={styles.actionButtonText}>Gérer Stock</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.actionButton}>
+            <MockIcon name="trending-up" size={20} color="#10B981" />
+            <Text style={styles.actionButtonText}>Rapports</Text>
           </TouchableOpacity>
         </View>
 
         {lowStockProducts.length > 0 && (
-          <Card style={styles.alertCard}>
+          <AnimatedCard style={styles.alertCard} animationType="slideUp">
             <View style={styles.alertHeader}>
-              <Icon name="warning" size={20} color="#EF4444" />
-              <Text style={styles.alertTitle}>Alertes de stock</Text>
+              <MockIcon name="warning" size={20} color="#EF4444" />
+              <Text style={styles.alertTitle}>{t('products.lowStockAlert')}</Text>
             </View>
             <Text style={styles.alertSubtitle}>
-              {lowStockProducts.length} produit(s) en stock faible
+              {lowStockProducts.length} {t('products.lowStockProducts')}
             </Text>
-          </Card>
+          </AnimatedCard>
         )}
 
         <View style={styles.productsGrid}>
-          {filteredProducts.map(product => (
-            <Card key={product.id} style={styles.productCard}>
+          {filteredProducts.map((product, index) => (
+            <AnimatedCard 
+              key={product.id} 
+              style={styles.productCard}
+              delay={index * 100}
+              animationType="slideUp"
+            >
               <View style={styles.productHeader}>
                 <View style={styles.productIcon}>
-                  <Icon name="inventory" size={24} color="#2563EB" />
+                  <MockIcon name="inventory" size={24} color="#2563EB" />
                 </View>
                 <View style={styles.productInfo}>
                   <Text style={styles.productName}>{product.name}</Text>
@@ -81,7 +105,7 @@ const ProductsScreen: React.FC = () => {
 
               <View style={styles.stockInfo}>
                 <View style={styles.stockItem}>
-                  <Text style={styles.stockLabel}>Stock actuel</Text>
+                  <Text style={styles.stockLabel}>{t('products.currentStock')}</Text>
                   <Text
                     style={[
                       styles.stockValue,
@@ -92,20 +116,20 @@ const ProductsScreen: React.FC = () => {
                   </Text>
                 </View>
                 <View style={styles.stockItem}>
-                  <Text style={styles.stockLabel}>Seuil min</Text>
+                  <Text style={styles.stockLabel}>{t('products.minThreshold')}</Text>
                   <Text style={styles.stockValue}>{product.minStockAlert}</Text>
                 </View>
               </View>
 
               <View style={styles.priceInfo}>
                 <View style={styles.priceItem}>
-                  <Text style={styles.priceLabel}>Prix unité</Text>
+                  <Text style={styles.priceLabel}>{t('products.unitPrice')}</Text>
                   <Text style={styles.priceValue}>
                     {product.unitSalePrice.toLocaleString()}
                   </Text>
                 </View>
                 <View style={styles.priceItem}>
-                  <Text style={styles.priceLabel}>Prix paquet</Text>
+                  <Text style={styles.priceLabel}>{t('products.packagePrice')}</Text>
                   <Text style={styles.priceValue}>
                     {product.packageSalePrice.toLocaleString()}
                   </Text>
@@ -114,28 +138,36 @@ const ProductsScreen: React.FC = () => {
 
               <View style={styles.packageInfo}>
                 <Text style={styles.packageText}>
-                  {product.unitsPerPackage} unités par paquet
+                  {product.unitsPerPackage} {t('products.unitsPerPackage')}
                 </Text>
               </View>
 
               {product.currentStock <= product.minStockAlert && (
                 <View style={styles.lowStockBadge}>
-                  <Text style={styles.lowStockText}>Stock faible</Text>
+                  <Text style={styles.lowStockText}>{t('products.lowStock')}</Text>
                 </View>
               )}
-            </Card>
+            </AnimatedCard>
           ))}
         </View>
 
         {filteredProducts.length === 0 && (
           <View style={styles.emptyState}>
-            <Icon name="inventory" size={48} color="#9CA3AF" />
-            <Text style={styles.emptyTitle}>Aucun produit trouvé</Text>
+            <MockIcon name="inventory" size={48} color="#9CA3AF" />
+            <Text style={styles.emptyTitle}>{t('products.noProductsFound')}</Text>
             <Text style={styles.emptySubtitle}>
               {searchQuery
-                ? 'Essayez un autre terme de recherche'
-                : 'Commencez par ajouter vos premiers produits'}
+                ? t('products.tryDifferentSearch')
+                : t('products.addFirstProducts')}
             </Text>
+            {!searchQuery && (
+              <TouchableOpacity 
+                style={styles.addFirstButton}
+                onPress={() => navigation.navigate('AddProduct' as never)}>
+                <MockIcon name="add" size={20} color="#FFFFFF" />
+                <Text style={styles.addFirstButtonText}>Ajouter un produit</Text>
+              </TouchableOpacity>
+            )}
           </View>
         )}
       </ScrollView>
@@ -179,6 +211,31 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  actionButtons: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 16,
+  },
+  actionButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    paddingVertical: 12,
+    gap: 8,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  actionButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#1F2937',
   },
   alertCard: {
     backgroundColor: '#FEF2F2',
@@ -312,6 +369,21 @@ const styles = StyleSheet.create({
     color: '#6B7280',
     marginTop: 8,
     textAlign: 'center',
+  },
+  addFirstButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#2563EB',
+    borderRadius: 12,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    marginTop: 20,
+    gap: 8,
+  },
+  addFirstButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFFFFF',
   },
 });
 

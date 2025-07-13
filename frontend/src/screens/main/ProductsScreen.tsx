@@ -8,7 +8,7 @@ import {
   TextInput,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import MockIcon from '../../components/ui/MockIcon';
 import {useTranslation} from 'react-i18next';
 import Header from '../../components/ui/Header';
 import AnimatedCard from '../../components/ui/AnimatedCard';
@@ -42,7 +42,7 @@ const ProductsScreen: React.FC = () => {
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.searchContainer}>
           <View style={styles.searchBar}>
-            <Icon name="search" size={20} color="#6B7280" />
+            <MockIcon name="search" size={20} color="#6B7280" />
             <TextInput
               style={styles.searchInput}
               placeholder={t('products.searchPlaceholder')}
@@ -52,14 +52,14 @@ const ProductsScreen: React.FC = () => {
             />
           </View>
           <TouchableOpacity style={styles.addButton}>
-            <Icon name="add" size={20} color="#FFFFFF" />
+            <MockIcon name="add" size={20} color="#FFFFFF" />
           </TouchableOpacity>
         </View>
 
         {lowStockProducts.length > 0 && (
           <AnimatedCard style={styles.alertCard} animationType="slideUp">
             <View style={styles.alertHeader}>
-              <Icon name="warning" size={20} color="#EF4444" />
+              <MockIcon name="warning" size={20} color="#EF4444" />
               <Text style={styles.alertTitle}>{t('products.lowStockAlert')}</Text>
             </View>
             <Text style={styles.alertSubtitle}>
@@ -78,7 +78,7 @@ const ProductsScreen: React.FC = () => {
             >
               <View style={styles.productHeader}>
                 <View style={styles.productIcon}>
-                  <Icon name="inventory" size={24} color="#2563EB" />
+                  <MockIcon name="inventory" size={24} color="#2563EB" />
                 </View>
                 <View style={styles.productInfo}>
                   <Text style={styles.productName}>{product.name}</Text>
@@ -136,7 +136,7 @@ const ProductsScreen: React.FC = () => {
 
         {filteredProducts.length === 0 && (
           <View style={styles.emptyState}>
-            <Icon name="inventory" size={48} color="#9CA3AF" />
+            <MockIcon name="inventory" size={48} color="#9CA3AF" />
             <Text style={styles.emptyTitle}>{t('products.noProductsFound')}</Text>
             <Text style={styles.emptySubtitle}>
               {searchQuery

@@ -9,7 +9,7 @@ import {
   Pressable,
 } from 'react-native';
 import {useTranslation} from 'react-i18next';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import MockIcon from './MockIcon';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Animated, {
   useSharedValue,
@@ -90,7 +90,7 @@ const LanguageButton: React.FC = () => {
           onPressIn={onPressIn}
           onPressOut={onPressOut}
           activeOpacity={0.8}>
-          <Icon name="language" size={18} color="#667eea" />
+          <MockIcon name="language" size={18} color="#667eea" />
           <Text style={styles.languageFlag}>{currentLanguage.flag}</Text>
         </TouchableOpacity>
       </Animated.View>
@@ -106,13 +106,13 @@ const LanguageButton: React.FC = () => {
               <Pressable>
                 <View style={styles.modalHeader}>
                   <View style={styles.modalTitleContainer}>
-                    <Icon name="language" size={24} color="#667eea" />
+                    <MockIcon name="language" size={24} color="#667eea" />
                     <Text style={styles.modalTitle}>Choisir la langue</Text>
                   </View>
                   <TouchableOpacity
                     style={styles.closeButton}
                     onPress={closeModal}>
-                    <Icon name="close" size={20} color="#6B7280" />
+                    <MockIcon name="close" size={20} color="#6B7280" />
                   </TouchableOpacity>
                 </View>
 
@@ -141,7 +141,7 @@ const LanguageButton: React.FC = () => {
                       </View>
                       {i18n.language === language.code && (
                         <View style={styles.checkContainer}>
-                          <Icon name="check-circle" size={20} color="#667eea" />
+                          <MockIcon name="check-circle" size={20} color="#667eea" />
                         </View>
                       )}
                     </TouchableOpacity>

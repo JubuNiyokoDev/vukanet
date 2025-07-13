@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import MockIcon from '../../components/ui/MockIcon';
 import {useTranslation} from 'react-i18next';
 import Header from '../../components/ui/Header';
 import StatCard from '../../components/ui/StatCard';

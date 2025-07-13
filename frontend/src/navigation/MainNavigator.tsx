@@ -1,7 +1,7 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {useTranslation} from 'react-i18next';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import MockIcon from '../components/ui/MockIcon';
 
 import DashboardScreen from '../screens/main/DashboardScreen';
 import ProductsScreen from '../screens/main/ProductsScreen';
@@ -62,7 +62,7 @@ const MainNavigator: React.FC = () => {
               break;
           }
 
-          return <Icon name={iconName} size={20} color={color} />;
+          return <MockIcon name={iconName} size={20} color={color} />;
         },
       })}>
       <Tab.Screen

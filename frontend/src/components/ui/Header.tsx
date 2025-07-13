@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import MockIcon from './MockIcon';
 import LanguageButton from './LanguageButton';
 import Animated, {
   useSharedValue,
@@ -54,7 +54,7 @@ const Header: React.FC<HeaderProps> = ({
               style={styles.actionButton}
               onPress={onNotificationPress}
               {...createPressHandlers(notificationScale)}>
-              <Icon name="notifications" size={20} color="#667eea" />
+              <MockIcon name="notifications" size={20} color="#667eea" />
             </TouchableOpacity>
           </Animated.View>
         )}
@@ -67,10 +67,9 @@ const Header: React.FC<HeaderProps> = ({
               style={styles.actionButton}
               onPress={onSettingsPress}
               {...createPressHandlers(settingsScale)}>
-              <Icon name="settings" size={20} color="#667eea" />
+              <MockIcon name="settings" size={20} color="#667eea" />
             </TouchableOpacity>
           </Animated.View>
-        )}
         )}
       </View>
     </View>

@@ -9,12 +9,14 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {useTranslation} from 'react-i18next';
 import Header from '../../components/ui/Header';
-import Card from '../../components/ui/Card';
+import AnimatedCard from '../../components/ui/AnimatedCard';
 import {useProductStore} from '../../store/productStore';
 import {useAuthStore} from '../../store/authStore';
 
 const ProductsScreen: React.FC = () => {
+  const {t} = useTranslation();
   const {user} = useAuthStore();
   const {products, getLowStockProducts} = useProductStore();
   const [searchQuery, setSearchQuery] = useState('');
@@ -32,8 +34,8 @@ const ProductsScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Header
-        title="Produits"
-        subtitle={`${storeProducts.length} produits • ${lowStockProducts.length} alertes`}
+        title={t('products.title')}
+        subtitle={`${storeProducts.length} ${t('navigation.products')} • ${lowStockProducts.length} ${t('products.alerts')}`}
         showNotifications={true}
       />
 
@@ -43,7 +45,7 @@ const ProductsScreen: React.FC = () => {
             <Icon name="search" size={20} color="#6B7280" />
             <TextInput
               style={styles.searchInput}
-              placeholder="Rechercher un produit..."
+              placeholder={t('products.searchPlaceholder')}
               value={searchQuery}
               onChangeText={setSearchQuery}
               placeholderTextColor="#9CA3AF"
@@ -55,20 +57,25 @@ const ProductsScreen: React.FC = () => {
         </View>
 
         {lowStockProducts.length > 0 && (
-          <Card style={styles.alertCard}>
+          <AnimatedCard style={styles.alertCard} animationType="slideUp">
             <View style={styles.alertHeader}>
               <Icon name="warning" size={20} color="#EF4444" />
-              <Text style={styles.alertTitle}>Alertes de stock</Text>
+              <Text style={styles.alertTitle}>{t('products.lowStockAlert')}</Text>
             </View>
             <Text style={styles.alertSubtitle}>
-              {lowStockProducts.length} produit(s) en stock faible
+              {lowStockProducts.length} {t('products.lowStockProducts')}
             </Text>
-          </Card>
+          </AnimatedCard>
         )}
 
         <View style={styles.productsGrid}>
-          {filteredProducts.map(product => (
-            <Card key={product.id} style={styles.productCard}>
+          {filteredProducts.map((product, index) => (
+            <AnimatedCard 
+              key={product.id} 
+              style={styles.productCard}
+              delay={index * 100}
+              animationType="slideUp"
+            >
               <View style={styles.productHeader}>
                 <View style={styles.productIcon}>
                   <Icon name="inventory" size={24} color="#2563EB" />
@@ -81,7 +88,7 @@ const ProductsScreen: React.FC = () => {
 
               <View style={styles.stockInfo}>
                 <View style={styles.stockItem}>
-                  <Text style={styles.stockLabel}>Stock actuel</Text>
+                  <Text style={styles.stockLabel}>{t('products.currentStock')}</Text>
                   <Text
                     style={[
                       styles.stockValue,
@@ -92,20 +99,20 @@ const ProductsScreen: React.FC = () => {
                   </Text>
                 </View>
                 <View style={styles.stockItem}>
-                  <Text style={styles.stockLabel}>Seuil min</Text>
+                  <Text style={styles.stockLabel}>{t('products.minThreshold')}</Text>
                   <Text style={styles.stockValue}>{product.minStockAlert}</Text>
                 </View>
               </View>
 
               <View style={styles.priceInfo}>
                 <View style={styles.priceItem}>
-                  <Text style={styles.priceLabel}>Prix unité</Text>
+                  <Text style={styles.priceLabel}>{t('products.unitPrice')}</Text>
                   <Text style={styles.priceValue}>
                     {product.unitSalePrice.toLocaleString()}
                   </Text>
                 </View>
                 <View style={styles.priceItem}>
-                  <Text style={styles.priceLabel}>Prix paquet</Text>
+                  <Text style={styles.priceLabel}>{t('products.packagePrice')}</Text>
                   <Text style={styles.priceValue}>
                     {product.packageSalePrice.toLocaleString()}
                   </Text>
@@ -114,27 +121,27 @@ const ProductsScreen: React.FC = () => {
 
               <View style={styles.packageInfo}>
                 <Text style={styles.packageText}>
-                  {product.unitsPerPackage} unités par paquet
+                  {product.unitsPerPackage} {t('products.unitsPerPackage')}
                 </Text>
               </View>
 
               {product.currentStock <= product.minStockAlert && (
                 <View style={styles.lowStockBadge}>
-                  <Text style={styles.lowStockText}>Stock faible</Text>
+                  <Text style={styles.lowStockText}>{t('products.lowStock')}</Text>
                 </View>
               )}
-            </Card>
+            </AnimatedCard>
           ))}
         </View>
 
         {filteredProducts.length === 0 && (
           <View style={styles.emptyState}>
             <Icon name="inventory" size={48} color="#9CA3AF" />
-            <Text style={styles.emptyTitle}>Aucun produit trouvé</Text>
+            <Text style={styles.emptyTitle}>{t('products.noProductsFound')}</Text>
             <Text style={styles.emptySubtitle}>
               {searchQuery
-                ? 'Essayez un autre terme de recherche'
-                : 'Commencez par ajouter vos premiers produits'}
+                ? t('products.tryDifferentSearch')
+                : t('products.addFirstProducts')}
             </Text>
           </View>
         )}

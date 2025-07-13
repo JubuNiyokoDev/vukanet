@@ -1,25 +1,21 @@
 import React from 'react';
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import MockIcon from '../../components/ui/MockIcon';
-import {useTranslation} from 'react-i18next';
-import MockIcon from '../../components/ui/MockIcon';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import Header from '../../components/ui/Header';
 import StatCard from '../../components/ui/StatCard';
 import AnimatedCard from '../../components/ui/AnimatedCard';
-import AnimatedCard from '../../components/ui/AnimatedCard';
-import {useAuthStore} from '../../store/authStore';
-import {useProductStore} from '../../store/productStore';
-import {useSalesStore} from '../../store/salesStore';
+import { useAuthStore } from '../../store/authStore';
+import { useProductStore } from '../../store/productStore';
+import { useSalesStore } from '../../store/salesStore';
 
 const DashboardScreen: React.FC = () => {
-  const {t} = useTranslation();
-  const {t} = useTranslation();
-  const {user} = useAuthStore();
-  const {products, getLowStockProducts} = useProductStore();
-  const {sales, getTotalSales, getTotalDebts} = useSalesStore();
+  const { t } = useTranslation();
+  const { user } = useAuthStore();
+  const { products, getLowStockProducts } = useProductStore();
+  const { sales, getTotalSales, getTotalDebts } = useSalesStore();
 
   const userStoreId = user?.storeId;
   const storeProducts = products.filter(p => p.storeId === userStoreId);
@@ -27,12 +23,10 @@ const DashboardScreen: React.FC = () => {
   const totalSales = getTotalSales(userStoreId);
   const totalDebts = getTotalDebts(userStoreId);
 
-  // Calcul du capital en stock
   const stockCapital = storeProducts.reduce((total, product) => {
     return (
       total +
-      (product.currentStock * product.packagePurchasePrice) /
-        product.unitsPerPackage
+      (product.currentStock * product.packagePurchasePrice) / product.unitsPerPackage
     );
   }, 0);
 
@@ -40,8 +34,6 @@ const DashboardScreen: React.FC = () => {
     <SafeAreaView style={styles.container}>
       <LinearGradient colors={['#2563EB', '#1D4ED8']} style={styles.header}>
         <Header
-          title={`${t('dashboard.hello')}, ${user?.name || 'Utilisateur'}`}
-          subtitle={user?.storeName || t('profile.store')}
           title={`${t('dashboard.hello')}, ${user?.name || 'Utilisateur'}`}
           subtitle={user?.storeName || t('profile.store')}
           showNotifications={true}
@@ -57,7 +49,6 @@ const DashboardScreen: React.FC = () => {
               iconName="attach-money"
               color="#10B981"
               subtitle={t('dashboard.totalEncashed')}
-              subtitle={t('dashboard.totalEncashed')}
             />
             <StatCard
               title={t('dashboard.stockCapital')}
@@ -65,9 +56,9 @@ const DashboardScreen: React.FC = () => {
               iconName="inventory"
               color="#2563EB"
               subtitle={t('dashboard.inventoryValue')}
-              subtitle={t('dashboard.inventoryValue')}
             />
           </View>
+
           <View style={styles.statsRow}>
             <StatCard
               title={t('dashboard.debts')}
@@ -75,22 +66,17 @@ const DashboardScreen: React.FC = () => {
               iconName="trending-up"
               color="#F59E0B"
               subtitle={t('dashboard.toRecover')}
-              subtitle={t('dashboard.toRecover')}
             />
             <StatCard
-              title={t('dashboard.stockAlerts')}
               title={t('dashboard.stockAlerts')}
               value={lowStockProducts.length.toString()}
               iconName="warning"
               color="#EF4444"
               subtitle={t('dashboard.lowProducts')}
-              subtitle={t('dashboard.lowProducts')}
             />
           </View>
         </View>
 
-        <AnimatedCard style={styles.alertsCard} delay={200} animationType="slideUp">
-          <Text style={styles.alertsTitle}>{t('dashboard.stockAlertsTitle')}</Text>
         <AnimatedCard style={styles.alertsCard} delay={200} animationType="slideUp">
           <Text style={styles.alertsTitle}>{t('dashboard.stockAlertsTitle')}</Text>
           {lowStockProducts.length > 0 ? (
@@ -104,44 +90,35 @@ const DashboardScreen: React.FC = () => {
                 </View>
                 <View style={styles.alertBadge}>
                   <Text style={styles.alertBadgeText}>{t('dashboard.lowStock')}</Text>
-                  <Text style={styles.alertBadgeText}>{t('dashboard.lowStock')}</Text>
                 </View>
               </View>
             ))
           ) : (
             <Text style={styles.noAlerts}>{t('dashboard.noAlerts')}</Text>
-            <Text style={styles.noAlerts}>{t('dashboard.noAlerts')}</Text>
           )}
         </AnimatedCard>
-        </AnimatedCard>
 
-        <AnimatedCard style={styles.quickStatsCard} delay={400} animationType="scale">
-          <Text style={styles.quickStatsTitle}>{t('dashboard.quickOverview')}</Text>
         <AnimatedCard style={styles.quickStatsCard} delay={400} animationType="scale">
           <Text style={styles.quickStatsTitle}>{t('dashboard.quickOverview')}</Text>
           <View style={styles.quickStatsGrid}>
             <View style={styles.quickStatItem}>
               <Text style={styles.quickStatValue}>{storeProducts.length}</Text>
               <Text style={styles.quickStatLabel}>{t('dashboard.products')}</Text>
-              <Text style={styles.quickStatLabel}>{t('dashboard.products')}</Text>
             </View>
             <View style={styles.quickStatItem}>
               <Text style={styles.quickStatValue}>{sales.length}</Text>
               <Text style={styles.quickStatLabel}>{t('dashboard.sales')}</Text>
-              <Text style={styles.quickStatLabel}>{t('dashboard.sales')}</Text>
             </View>
             <View style={styles.quickStatItem}>
               <Text style={styles.quickStatValue}>
-                {Math.round(
-                  ((totalSales - stockCapital) / stockCapital) * 100,
-                ) || 0}
+                {stockCapital > 0
+                  ? Math.round(((totalSales - stockCapital) / stockCapital) * 100)
+                  : 0}
                 %
               </Text>
               <Text style={styles.quickStatLabel}>{t('dashboard.margin')}</Text>
-              <Text style={styles.quickStatLabel}>{t('dashboard.margin')}</Text>
             </View>
           </View>
-        </AnimatedCard>
         </AnimatedCard>
       </ScrollView>
     </SafeAreaView>

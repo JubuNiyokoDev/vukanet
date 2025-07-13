@@ -1,0 +1,56 @@
+{
+  "name": "vukanet",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "lint": "eslint .",
+    "start": "react-native start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "^2.2.0",
+    "@react-native-community/netinfo": "^11.4.1",
+    "@react-native/gradle-plugin": "^0.80.1",
+    "@react-navigation/bottom-tabs": "^7.4.2",
+    "@react-navigation/native": "^7.1.14",
+    "@react-navigation/native-stack": "^7.3.21",
+    "@react-navigation/stack": "^7.4.2",
+    "date-fns": "^4.1.0",
+    "i18next": "^23.16.0",
+    "react": "19.1.0",
+    "react-i18next": "^15.0.3",
+    "react-native": "0.80.1",
+    "react-native-gesture-handler": "^2.27.1",
+    "react-native-keychain": "^9.2.3",
+    "react-native-linear-gradient": "^2.8.3",
+    "react-native-reanimated": "^3.18.0",
+    "react-native-safe-area-context": "^5.5.2",
+    "react-native-screens": "^4.11.1",
+    "react-native-svg": "^15.12.0",
+    "react-native-vector-icons": "^10.2.0",
+    "zustand": "^5.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "@babel/runtime": "^7.26.0",
+    "@react-native-community/cli": "^15.0.0",
+    "@react-native/eslint-config": "^0.80.0",
+    "@react-native/metro-config": "^0.80.0",
+    "@react-native/typescript-config": "^0.80.0",
+    "@types/react": "^19.0.0",
+    "@types/react-test-renderer": "^19.0.0",
+    "babel-jest": "^29.7.0",
+    "eslint": "^9.13.0",
+    "jest": "^29.7.0",
+    "metro-react-native-babel-preset": "^0.77.0",
+    "prettier": "^3.3.3",
+    "react-test-renderer": "19.1.0",
+    "typescript": "^5.6.3"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

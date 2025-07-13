@@ -1,0 +1,248 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(SELLER)
+  isActive  Boolean  @default(true)
+  language  String   @default("fr") // fr, en, rn, sw
+  storeId   String?
+  store     Store?   @relation(fields: [storeId], references: [id])
+  
+  // Relations
+  sales           Sale[]
+  stockMovements  StockMovement[]
+  syncQueues      SyncQueue[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("users")
+}
+
+model Store {
+  id          String  @id @default(uuid())
+  name        String
+  address     String?
+  phone       String?
+  email       String?
+  description String?
+  isActive    Boolean @default(true)
+  
+  // Relations
+  users           User[]
+  products        Product[]
+  sales           Sale[]
+  debts           Debt[]
+  stockMovements  StockMovement[]
+  capitalSnapshots CapitalSnapshot[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("stores")
+}
+
+model Product {
+  id                    String  @id @default(uuid())
+  name                  String
+  description           String?
+  category              String
+  barcode               String?
+  unitsPerPackage       Int
+  currentStock          Int     @default(0)
+  packagePurchasePrice  Float
+  unitSalePrice         Float
+  packageSalePrice      Float
+  minStockAlert         Int     @default(5)
+  isActive              Boolean @default(true)
+  
+  storeId String
+  store   Store  @relation(fields: [storeId], references: [id])
+  
+  // Relations
+  sales          Sale[]
+  stockMovements StockMovement[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("products")
+}
+
+model Sale {
+  id           String      @id @default(uuid())
+  quantity     Int
+  unitPrice    Float
+  totalAmount  Float
+  saleType     SaleType    @default(UNIT)
+  paymentType  PaymentType @default(CASH)
+  clientName   String?
+  clientPhone  String?
+  notes        String?
+  isDebt       Boolean     @default(false)
+  
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  
+  sellerId String
+  seller   User   @relation(fields: [sellerId], references: [id])
+  
+  storeId String
+  store   Store  @relation(fields: [storeId], references: [id])
+  
+  // Relations
+  debt Debt?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("sales")
+}
+
+model Debt {
+  id            String     @id @default(uuid())
+  amount        Float
+  paidAmount    Float      @default(0)
+  remainingAmount Float
+  status        DebtStatus @default(PENDING)
+  dueDate       DateTime?
+  clientName    String
+  clientPhone   String?
+  notes         String?
+  
+  saleId String @unique
+  sale   Sale   @relation(fields: [saleId], references: [id])
+  
+  storeId String
+  store   Store  @relation(fields: [storeId], references: [id])
+  
+  // Relations
+  payments DebtPayment[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("debts")
+}
+
+model DebtPayment {
+  id          String  @id @default(uuid())
+  amount      Float
+  paymentType PaymentType @default(CASH)
+  notes       String?
+  
+  debtId String
+  debt   Debt   @relation(fields: [debtId], references: [id])
+  
+  createdAt DateTime @default(now())
+  
+  @@map("debt_payments")
+}
+
+model StockMovement {
+  id          String         @id @default(uuid())
+  type        MovementType
+  quantity    Int
+  unitPrice   Float?
+  totalValue  Float?
+  reason      String?
+  reference   String?
+  
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+  
+  storeId String
+  store   Store  @relation(fields: [storeId], references: [id])
+  
+  createdAt DateTime @default(now())
+  
+  @@map("stock_movements")
+}
+
+model CapitalSnapshot {
+  id              String @id @default(uuid())
+  totalStock      Float
+  totalSales      Float
+  totalDebts      Float
+  totalExpenses   Float
+  netProfit       Float
+  snapshotDate    DateTime
+  
+  storeId String
+  store   Store  @relation(fields: [storeId], references: [id])
+  
+  createdAt DateTime @default(now())
+  
+  @@map("capital_snapshots")
+}
+
+model SyncQueue {
+  id          String     @id @default(uuid())
+  action      String     // CREATE, UPDATE, DELETE
+  tableName   String
+  recordId    String
+  data        Json
+  status      SyncStatus @default(PENDING)
+  attempts    Int        @default(0)
+  maxAttempts Int        @default(3)
+  error       String?
+  
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("sync_queue")
+}
+
+enum Role {
+  ADMIN
+  SELLER
+}
+
+enum SaleType {
+  UNIT
+  PACKAGE
+}
+
+enum PaymentType {
+  CASH
+  MOBILE_MONEY
+  BANK_TRANSFER
+  CREDIT_CARD
+}
+
+enum DebtStatus {
+  PENDING
+  PARTIAL
+  PAID
+  OVERDUE
+}
+
+enum MovementType {
+  IN
+  OUT
+  ADJUSTMENT
+  TRANSFER
+}
+
+enum SyncStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
